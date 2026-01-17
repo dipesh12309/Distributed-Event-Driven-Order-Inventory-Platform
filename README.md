@@ -25,7 +25,7 @@ Each service owns its data and interacts with other services exclusively through
 
 **Order Service**
 - Owns the order lifecycle
-- Acts as the Saga orchestrator
+- Acts as the main workflow coordinator.
 - Manages order state transitions
 
 **Inventory Service**

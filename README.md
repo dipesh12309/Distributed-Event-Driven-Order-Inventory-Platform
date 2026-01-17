@@ -64,11 +64,11 @@ All cross-service communication is asynchronous and event-driven.
 
 ---
 
-## Saga Orchestration
+## Order workflow
 
-The system uses an orchestrated Saga pattern.
+The system uses an order workflow pattern.
 
-- Order Service acts as the Saga orchestrator
+- Order Service acts as the main workflow coordinator.
 - Each step emits domain events
 - Failures trigger compensating actions
 

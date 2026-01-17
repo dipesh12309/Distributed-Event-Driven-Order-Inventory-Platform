@@ -29,3 +29,9 @@ buildNumber.properties
 # ===== Temporary files =====
 *.tmp
 *.swp
+/compiler.xml
+/vcs.xml
+/encodings.xml
+/jarRepositories.xml
+/misc.xml
+/modules.xml

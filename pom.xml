@@ -13,13 +13,6 @@
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <!-- ===== Modules ===== -->
-    <modules>
-        <module>order-api</module>
-        <module>order-domain</module>
-        <module>order-service</module>
-    </modules>
-
     <!-- ===== Common Properties ===== -->
     <properties>
         <java.version>17</java.version>

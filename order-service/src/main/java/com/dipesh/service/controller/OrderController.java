@@ -1,4 +1,4 @@
-package com.dipesh.controller;
+package com.dipesh.service.controller;
 
 import com.dipesh.model.Order;
 import com.dipesh.model.OrderItem;
@@ -33,7 +33,7 @@ public class OrderController {
             @RequestParam String userId,
             @RequestBody List<OrderItem> items
     ) {
-        return orderService.createOrder(
+        return orderService.placeOrder(
                 idempotencyKey,
                 userId,
                 items

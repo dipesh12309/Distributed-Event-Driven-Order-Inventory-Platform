@@ -1,37 +1,44 @@
-# ===== OS =====
+# =========================
+# Maven
+# =========================
+target/
+**/target/
+
+# =========================
+# IntelliJ IDEA
+# =========================
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# =========================
+# Eclipse
+# =========================
+.project
+.classpath
+.settings/
+
+# =========================
+# OS files
+# =========================
 .DS_Store
 Thumbs.db
 
-# ===== IntelliJ IDEA =====
-.idea/
-*.iml
-out/
-shelf/
-workspace.xml
-
-# ===== Maven =====
-target/
-pom.xml.tag
-pom.xml.releaseBackup
-pom.xml.versionsBackup
-pom.xml.next
-dependency-reduced-pom.xml
-buildNumber.properties
-.mvn/timing.properties
-
-# ===== Logs =====
+# =========================
+# Logs
+# =========================
 *.log
 
-# ===== Environment files =====
+# =========================
+# Local env / overrides
+# =========================
+application-local.properties
 .env
-.env.*
 
-# ===== Temporary files =====
-*.tmp
-*.swp
-/compiler.xml
-/vcs.xml
-/encodings.xml
-/jarRepositories.xml
-/misc.xml
-/modules.xml
+# =========================
+# Generated jars (optional)
+# =========================
+*.jar
+*.jar.original

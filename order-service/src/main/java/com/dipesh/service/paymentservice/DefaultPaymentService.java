@@ -1,10 +1,12 @@
 package com.dipesh.service.paymentservice;
 
 import com.dipesh.model.Order;
+import org.springframework.stereotype.Service;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Service
 public class DefaultPaymentService implements PaymentService {
 
     private final Map<String, Payment> store = new ConcurrentHashMap<>();

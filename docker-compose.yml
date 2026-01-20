@@ -1,9 +1,9 @@
 version: '3.8'
 
 services:
-  postgres:
+  order-db:
     image: postgres:15
-    container_name: postgres
+    container_name: order-db
     environment:
       POSTGRES_DB: orders
       POSTGRES_USER: order_user
@@ -11,9 +11,9 @@ services:
     ports:
       - "5433:5432"
 
-  redis:
+  order-redis:
     image: redis:7
-    container_name: redis
+    container_name: order-redis
     ports:
       - "6379:6379"
 

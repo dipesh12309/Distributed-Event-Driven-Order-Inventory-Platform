@@ -1,12 +1,10 @@
 package com.dipesh.service.repo;
 
-import com.dipesh.model.Order;
+import com.dipesh.service.entity.OrderEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Optional;
+import java.util.UUID;
 
-public interface OrderRepository {
-
-    void save(Order order);
-
-    Optional<Order> findById(String orderId);
+public interface OrderRepository extends JpaRepository<OrderEntity, UUID>
+{
 }

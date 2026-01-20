@@ -1,11 +1,13 @@
 package com.dipesh.service.application;
 
 import com.dipesh.model.Order;
+import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+@Component
 public class InMemoryIdempotencyStore {
 
     private final ConcurrentMap<String, Order> store = new ConcurrentHashMap<>();

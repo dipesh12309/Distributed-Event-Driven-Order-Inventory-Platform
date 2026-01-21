@@ -1,44 +1,67 @@
 # =========================
-# Maven
+# Maven & Build Artifacts
 # =========================
 target/
 **/target/
+**/target/**
+# Maven wrapper files (optional: keep these if you want others to build without installing Maven)
+#!.mvn/wrapper/maven-wrapper.jar
+
+# Specific to multi-module version management
+flattened-pom.xml
+**/flattened-pom.xml
 
 # =========================
 # IntelliJ IDEA
 # =========================
 .idea/
+**/.idea/
 *.iml
+**/ *.iml
 *.iws
 *.ipr
 out/
+**/out/
+# Exclude cmake-build-debug for JNI/Native work if applicable
+**/cmake-build-debug/
 
 # =========================
-# Eclipse
+# Eclipse & VS Code
 # =========================
 .project
 .classpath
 .settings/
+**/.project
+**/.classpath
+**/.settings/
+.vscode/
+**/.vscode/
+bin/
+**/bin/
 
 # =========================
-# OS files
-# =========================
-.DS_Store
-Thumbs.db
-
-# =========================
-# Logs
+# Logs & Temporary Files
 # =========================
 *.log
+**/logs/
+temp/
+**/temp/
 
 # =========================
-# Local env / overrides
+# Spring Boot Specifics
 # =========================
-application-local.properties
+# Ignore the auto-generated help files in every module
+HELP.md
+**/HELP.md
+# Ignore crash reports
+hs_err_pid*
+
+# =========================
+# Local Configuration
+# =========================
+# Don't commit secrets or local overrides
 .env
-
-# =========================
-# Generated jars (optional)
-# =========================
-*.jar
-*.jar.original
+.env.*
+application-local.properties
+**/application-local.properties
+**/application-dev.properties

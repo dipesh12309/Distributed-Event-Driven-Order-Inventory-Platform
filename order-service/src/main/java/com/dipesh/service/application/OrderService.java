@@ -3,6 +3,7 @@ package com.dipesh.service.application;
 import com.dipesh.model.Order;
 import com.dipesh.model.OrderItem;
 import com.dipesh.service.entity.OrderEntity;
+import com.dipesh.service.exception.OrderNotFoundException;
 import com.dipesh.service.paymentservice.Payment;
 import com.dipesh.service.paymentservice.PaymentService;
 import com.dipesh.service.paymentservice.PaymentStatus;
@@ -58,8 +59,11 @@ public class OrderService
         return order;
     }
 
-    public OrderEntity getOrder(String orderId)
+    public Order getOrder(String orderId)
     {
-        return repository.findById(UUID.fromString(orderId)).orElseThrow(() -> new IllegalArgumentException("Order not found: " + orderId));
+        UUID id = UUID.fromString(orderId);
+        OrderEntity orderEntity = repository.findById(String.valueOf(id))
+                .orElseThrow(() -> new OrderNotFoundException("Order not found: " + orderId));
+        return OrderEntityMapper.toDomain(orderEntity);
     }
 }

@@ -8,6 +8,7 @@ import com.dipesh.service.paymentservice.Payment;
 import com.dipesh.service.paymentservice.PaymentService;
 import com.dipesh.service.paymentservice.PaymentStatus;
 import com.dipesh.service.repo.OrderRepository;
+import com.dipesh.service.storage.IdempotencyStore;
 import com.dipesh.service.util.OrderEntityMapper;
 import org.springframework.stereotype.Service;
 
@@ -20,10 +21,10 @@ public class OrderService
 {
 
     private final OrderRepository repository;
-    private final InMemoryIdempotencyStore idempotencyStore;
+    private final IdempotencyStore idempotencyStore;
     private final PaymentService paymentService;
 
-    public OrderService(OrderRepository repository, InMemoryIdempotencyStore idempotencyStore, PaymentService paymentService)
+    public OrderService(OrderRepository repository, IdempotencyStore idempotencyStore, PaymentService paymentService)
     {
         this.repository = Objects.requireNonNull(repository);
         this.idempotencyStore = Objects.requireNonNull(idempotencyStore);
@@ -32,10 +33,11 @@ public class OrderService
 
     public Order placeOrder(String key, String userId, List<OrderItem> items)
     {
-        Order existing = idempotencyStore.get(key).orElse(null);
+        String existing = idempotencyStore.get(key).orElse(null);
         if (existing != null)
         {
-            return existing;
+            OrderEntity referenceById = repository.getReferenceById(existing);
+            return OrderEntityMapper.toDomain(referenceById);
         }
 
         Order order = new Order(userId, items);
@@ -50,12 +52,12 @@ public class OrderService
         if (finalPayment.getStatus() == PaymentStatus.FAILED)
         {
             order.cancel();
-            idempotencyStore.put(key, order);
+            idempotencyStore.put(key, order.getOrderId());
             return order;
         }
 
         order.markConfirmed();
-        idempotencyStore.put(key, order);
+        idempotencyStore.put(key, order.getOrderId());
         return order;
     }
 

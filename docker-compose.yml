@@ -1,6 +1,24 @@
 version: '3.8'
 
 services:
+  order-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: order-service
+    ports:
+      - "8080:8080"
+    depends_on:
+      - order-db
+      - order-redis
+      - kafka
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://order-db:5432/orders
+      SPRING_DATASOURCE_USERNAME: order_user
+      SPRING_DATASOURCE_PASSWORD: order_pass
+      SPRING_REDIS_HOST: order-redis
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      restart: unless-stopped
   order-db:
     image: postgres:15
     container_name: order-db

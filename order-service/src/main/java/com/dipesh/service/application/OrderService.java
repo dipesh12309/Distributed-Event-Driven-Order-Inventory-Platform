@@ -3,10 +3,9 @@ package com.dipesh.service.application;
 import com.dipesh.model.Order;
 import com.dipesh.model.OrderItem;
 import com.dipesh.service.entity.OrderEntity;
+import com.dipesh.service.events.OrderCreatedEvent;
+import com.dipesh.service.events.OrderEventProducer;
 import com.dipesh.service.exception.OrderNotFoundException;
-import com.dipesh.service.paymentservice.Payment;
-import com.dipesh.service.paymentservice.PaymentService;
-import com.dipesh.service.paymentservice.PaymentStatus;
 import com.dipesh.service.repo.OrderRepository;
 import com.dipesh.service.storage.IdempotencyStore;
 import com.dipesh.service.util.OrderEntityMapper;
@@ -22,13 +21,13 @@ public class OrderService
 
     private final OrderRepository repository;
     private final IdempotencyStore idempotencyStore;
-    private final PaymentService paymentService;
+    private final OrderEventProducer orderEventProducer;
 
-    public OrderService(OrderRepository repository, IdempotencyStore idempotencyStore, PaymentService paymentService)
+    public OrderService(OrderRepository repository, IdempotencyStore idempotencyStore, OrderEventProducer orderEventProducer)
     {
         this.repository = Objects.requireNonNull(repository);
         this.idempotencyStore = Objects.requireNonNull(idempotencyStore);
-        this.paymentService = paymentService;
+        this.orderEventProducer = orderEventProducer;
     }
 
     public Order placeOrder(String key, String userId, List<OrderItem> items)
@@ -44,19 +43,8 @@ public class OrderService
         OrderEntity entity = OrderEntityMapper.toEntity(order);
         repository.save(entity);
 
-        order.markProcessing();
+        orderEventProducer.sendOrderCreatedEvent(new OrderCreatedEvent(order.getOrderId(), userId, order.calculateAmount()));
 
-        Payment payment = paymentService.initiatePayment(order);
-        Payment finalPayment = paymentService.confirmPayment(payment.getPaymentId());
-
-        if (finalPayment.getStatus() == PaymentStatus.FAILED)
-        {
-            order.cancel();
-            idempotencyStore.put(key, order.getOrderId());
-            return order;
-        }
-
-        order.markConfirmed();
         idempotencyStore.put(key, order.getOrderId());
         return order;
     }

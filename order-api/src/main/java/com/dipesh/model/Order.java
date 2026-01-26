@@ -1,5 +1,6 @@
 package com.dipesh.model;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
@@ -20,7 +21,7 @@ public class Order
         this.orderId = UUID.randomUUID().toString();
         this.userId = Objects.requireNonNull(userId);
         this.items = List.copyOf(items);
-        this.state = OrderState.CREATED;
+        this.state = OrderState.PROCESSING;
         this.createdAt = Instant.now();
     }
 
@@ -31,33 +32,6 @@ public class Order
         this.userId = userId;
         this.items = items;
         this.state = state;
-    }
-
-    public void markProcessing()
-    {
-        if (state != OrderState.CREATED)
-        {
-            throw new IllegalStateException("Order not in NEW state");
-        }
-        state = OrderState.PROCESSING;
-    }
-
-    public void markConfirmed()
-    {
-        if (state != OrderState.PROCESSING)
-        {
-            throw new IllegalStateException("Order not in PROCESSING state");
-        }
-        state = OrderState.CONFIRMED;
-    }
-
-    public void cancel()
-    {
-        if (state == OrderState.CONFIRMED)
-        {
-            throw new IllegalStateException("Confirmed order cannot be cancelled");
-        }
-        state = OrderState.CANCELLED;
     }
 
     public String getOrderId()
@@ -83,5 +57,10 @@ public class Order
     public Instant getCreatedAt()
     {
         return createdAt;
+    }
+
+    public BigDecimal calculateAmount()
+    {
+        return items.stream().map(OrderItem::getPrice).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }

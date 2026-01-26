@@ -10,11 +10,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "orders")
 public class OrderEntity
@@ -58,34 +62,23 @@ public class OrderEntity
         item.setOrder(this);
     }
 
-    public List<OrderItemEntity> getItems()
+    public void markConfirmed()
     {
-        return items;
+        if (state != OrderState.PROCESSING)
+        {
+            throw new IllegalStateException("Order not in PROCESSING state");
+        }
+        state = OrderState.CONFIRMED;
     }
 
-    public Instant getCreatedAt()
+    public void markCancelled()
     {
-        return createdAt;
+        if (state == OrderState.CONFIRMED)
+        {
+            throw new IllegalStateException("Confirmed order cannot be cancelled");
+        }
+        state = OrderState.CANCELLED;
     }
 
-    public String getOrderId()
-    {
-        return orderId;
-    }
-
-    public OrderState getState()
-    {
-        return state;
-    }
-
-    public String getUserId()
-    {
-        return userId;
-    }
-
-    public int getVersion()
-    {
-        return version;
-    }
 }
 

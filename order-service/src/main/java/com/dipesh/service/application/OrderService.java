@@ -5,6 +5,7 @@ import com.dipesh.model.OrderItem;
 import com.dipesh.service.entity.OrderEntity;
 import com.dipesh.service.events.OrderCreatedEvent;
 import com.dipesh.service.events.OrderEventProducer;
+import com.dipesh.service.events.OrderItemPayload;
 import com.dipesh.service.exception.OrderNotFoundException;
 import com.dipesh.service.repo.OrderRepository;
 import com.dipesh.service.storage.IdempotencyStore;
@@ -43,7 +44,12 @@ public class OrderService
         OrderEntity entity = OrderEntityMapper.toEntity(order);
         repository.save(entity);
 
-        orderEventProducer.sendOrderCreatedEvent(new OrderCreatedEvent(order.getOrderId(), userId, order.calculateAmount()));
+        orderEventProducer.sendOrderCreatedEvent(new OrderCreatedEvent(
+                order.getOrderId(),
+                userId,
+                order.calculateAmount(),
+                items.stream().map(item -> new OrderItemPayload(item.getProductId(), item.getQuantity())).toList()
+        ));
 
         idempotencyStore.put(key, order.getOrderId());
         return order;

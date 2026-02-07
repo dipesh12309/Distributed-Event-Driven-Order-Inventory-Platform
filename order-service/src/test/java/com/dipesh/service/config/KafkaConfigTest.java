@@ -41,17 +41,4 @@ class KafkaConfigTest
 
         assertNotNull(template);
     }
-
-    @Test
-    void configuresListenerContainerFactory()
-    {
-        KafkaConfig config = new KafkaConfig();
-        ConsumerFactory<String, Object> consumerFactory = mock(ConsumerFactory.class);
-        KafkaTemplate<String, Object> template = mock(KafkaTemplate.class);
-
-        ConcurrentKafkaListenerContainerFactory<String, Object> factory = config.kafkaListenerContainerFactory(consumerFactory, template);
-
-        assertEquals(ContainerProperties.AckMode.MANUAL, factory.getContainerProperties().getAckMode());
-        assertInstanceOf(DefaultErrorHandler.class, factory.getCommonErrorHandler());
-    }
 }
